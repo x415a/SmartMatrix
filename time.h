@@ -3,7 +3,7 @@
 #include "Arduino.h"
 
 
-void fpsTick();
+void frameTick();
 uint8_t getFps(); 
 uint32_t getUnixTime();
 float getCurrentTimeSeconds();

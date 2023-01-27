@@ -9,7 +9,7 @@
 
 void setup() {
   #ifdef DEBUG
-    Serial.begin(115200);
+    Serial.begin(BOD_RATE);
   #endif
 
   randomSeed(analogRead(0));
@@ -26,5 +26,5 @@ void loop() {
   drawClock(DateTime(getUnixTime()), CRGB::Green);
   refreshMatrix();
   clearMatrix();
-  fpsTick();
+  frameTick();
 }

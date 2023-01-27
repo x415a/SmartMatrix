@@ -3,6 +3,7 @@
 #include "Arduino.h"
 
 #define DEBUG
+#define BOD_RATE 115200
 // #define SET_CURRENT_TIME
 
 #define FPS 60
