@@ -1,1 +1,1 @@
-# SmartLamp
+Based on arduino and the WS2811 LED matrix, a project to create a "Smart Lamp" that includes the functions of a clock, alarm clock, lamp, etc.
