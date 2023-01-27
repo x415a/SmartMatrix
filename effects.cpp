@@ -1,7 +1,9 @@
-typedef void (*CallbackFunc)();
-
-void sunriseEffect(bool=false);
-void ambientLightingEffect(bool=false);
+#include "FastLED.h"
+#include "matrix.h"
+#include "time.h"
+#include "define.h"
+#include "Arduino.h"
+#include "effects.h"
 
 
 void initEffects() {

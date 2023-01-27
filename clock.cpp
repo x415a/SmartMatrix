@@ -1,8 +1,9 @@
-#define CLOCK_SIZE_MIN 5
-#define CLOCK_SIZE_MAX 7
-
-
-uint8_t _clock_height = CLOCK_SIZE_SMALL;
+#include "RTClib.h"
+#include "define.h"
+#include "matrix.h"
+#include "time.h"
+#include "storage.h"
+#include "clock.h"
 
 
 void _drawClockNumSegment(uint8_t x, uint8_t y, uint8_t l, uint8_t h, uint8_t seg, CRGB &color) {
@@ -20,10 +21,9 @@ void _drawClockNumSegment(uint8_t x, uint8_t y, uint8_t l, uint8_t h, uint8_t se
 }
 
 
-void _drawClockNumber(uint8_t x, uint8_t y, uint8_t w, uint8_t h, uint8_t num, CRGB &color, CRGB &bg) {
+void _drawClockNumber(uint8_t x, uint8_t y, uint8_t w, uint8_t h, uint8_t num, CRGB &color) {
   num = pgm_read_byte(&CLOCK_NUMBERS[num]);
 
-  fillMatrix(x, y, x + w, y + h, bg);
   for (uint8_t seg = 0; seg < 7; ++seg) {
     if ((num >> seg) & 1)
       _drawClockNumSegment(x, y, w, h, seg, color);
@@ -31,15 +31,15 @@ void _drawClockNumber(uint8_t x, uint8_t y, uint8_t w, uint8_t h, uint8_t num, C
 }
 
 
-void _drawPair(uint8_t a, uint8_t b, uint8_t x, uint8_t y, uint8_t w, uint8_t h, uint8_t space, CRGB &color, CRGB &bg) {
-  _drawClockNumber(x, y, w, h, a, color, bg);
-  _drawClockNumber(x + w + space, y, w, h, b, color, bg);
+void _drawPair(uint8_t a, uint8_t b, uint8_t x, uint8_t y, uint8_t w, uint8_t h, uint8_t space, CRGB &color) {
+  _drawClockNumber(x, y, w, h, a, color);
+  _drawClockNumber(x + w + space, y, w, h, b, color);
 }
 
 
 void _drawSecondsIndicator(uint8_t h_end_x, uint8_t h_end_y, CRGB &color) {
   #ifndef USE_ONLY_DEFAULT_CLOCK_BLINKER
-    if (MTX_H - (_clock_height + 1) * 2 > 0) {
+    if (MTX_H - (5 + 1) * 2 > 0) {
       float cur_time = getCurrentTimeSeconds();
       uint8_t pos = ((uint8_t) ((MTX_W - 1) * (cur_time - (uint32_t) cur_time)) + 1) % MTX_W;
       if ((uint32_t) cur_time % 2) {
@@ -54,32 +54,23 @@ void _drawSecondsIndicator(uint8_t h_end_x, uint8_t h_end_y, CRGB &color) {
   }
 }
 
-
-void setClockHeight(uint8_t height) {
-  _clock_height = constrain(CLOCK_SIZE_MIN, height, CLOCK_SIZE_MAX);
-}
-
-
 void drawClock(DateTime time, CRGB color) {
   uint8_t hr = time.hour(), mn = time.minute(), numbers[] = {hr / 10 % 10, hr % 10, mn / 10 % 10, mn % 10};
-  CRGB bg = CRGB(color);
-  bg.fadeLightBy(240);
-
-  uint8_t h = _clock_height, w = h / 2 + h % 2,
+  uint8_t h = 5, w = h / 2 + h % 2,
           space = max(0, (MTX_W - 4 * w) / 3), hx = 0, hy = 0;
 
   if (space == 0) {
     uint8_t x = (MTX_W - (w + 1) * 2) / 2, y = (MTX_H - (h + 1) * 2) / 2;
-    _drawPair(numbers[0], numbers[1], x, y, w, h, 2, color, bg);
+    _drawPair(numbers[0], numbers[1], x, y, w, h, 2, color);
     hx = x + (w + 1) * 2;
     hy = y + h - 1;
-    _drawPair(numbers[2], numbers[3], x, y + h + 2, w, h, 2, color, bg);
+    _drawPair(numbers[2], numbers[3], x, y + h + 2, w, h, 2, color);
   } else {
     uint8_t x = (MTX_W - (w + 1) * 4) / 2, y = 1;
-    _drawPair(numbers[0], numbers[1], x, y, w, h, 1, color, bg);
+    _drawPair(numbers[0], numbers[1], x, y, w, h, 1, color);
     hx = x + w * 2 + 1;
     hy = y + h - 1;
-    _drawPair(numbers[2], numbers[3], x + w * 2 + 3, y, w, h, 1, color, bg);
+    _drawPair(numbers[2], numbers[3], x + w * 2 + 3, y, w, h, 1, color);
   }
 
   _drawSecondsIndicator(hx, hy, color);

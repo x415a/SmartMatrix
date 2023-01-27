@@ -1,3 +1,8 @@
+#include "time.h"
+#include "define.h"
+#include "control.h"
+
+
 #define MENU_DEFAULT_STATE 0
 
 

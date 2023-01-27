@@ -1,4 +1,9 @@
-/*class AudioFilter {
+#include "define.h"
+#include "microphone.h"
+
+#ifdef AUDIO_PIN
+
+class AudioFilter {
 public:
   AudioFilter(float start, float coef): _fil(start), _coef(coef) {}
 
@@ -114,4 +119,6 @@ void printAudioInfo() {
   Serial.print(getInstantAudioVolume());
 
   Serial.println();
-}*/
+}
+
+#endif

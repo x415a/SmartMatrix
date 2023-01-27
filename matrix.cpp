@@ -1,3 +1,9 @@
+#include "FastLED.h"
+#include "effects.h"
+#include "define.h"
+#include "matrix.h"
+
+
 CRGB matrix[MTX_NUM_LEDS];
 
 

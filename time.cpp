@@ -1,5 +1,6 @@
-#define RTC_UPDATE_INTERVAL ((uint32_t)24 * 3600 * 1000) / RTC_DAY_UPDATES
-
+#include "define.h"
+#include "RTClib.h"
+#include "Arduino.h"
 
 uint32_t _current_rtc_time = 0, _start_rtc_time = 0, _last_frame = 0, _last_sync = 0, _frame_delta = 0;
 RTC_DS1307 _rtc;
@@ -7,7 +8,7 @@ RTC_DS1307 _rtc;
 
 void _synchronizeTime() {
   _current_rtc_time = _rtc.now().unixtime();
-  _last_sync = (_current_rtc_time - _start_rtc_time) * 1000;
+  _last_sync = millis();
 
   #ifdef DEBUG
     Serial.print("RTC synchronization: ");
@@ -37,7 +38,7 @@ void initTime() {
 
 
 void fpsTick() {
-  static const uint16_t frame_time = 1000 / FPS;
+  #define FTIME 1000 / FPS
   _frame_delta = millis() - _last_frame;
 
   if (_frame_delta < 0) {
@@ -46,16 +47,13 @@ void fpsTick() {
     return;
   }
 
+  if (_frame_delta < FTIME)
+    delay(FTIME - _frame_delta);
+  _last_frame = millis();
+
   if (_last_frame - _last_sync > RTC_UPDATE_INTERVAL) {
-    Serial.print(_last_frame);
-    Serial.print(' ');
-    Serial.println(_last_sync);
     _synchronizeTime();
   }
-
-  if (_frame_delta < frame_time)
-    delay(frame_time - _frame_delta);
-  _last_frame = millis();
 }
 
 
@@ -65,10 +63,10 @@ uint8_t getFps() {
 
 
 uint32_t getUnixTime() {
-  return _current_rtc_time + (_last_frame - _last_sync) / 1000;
+  return _current_rtc_time + ((_last_frame > _last_sync) ? (_last_frame - _last_sync) / 1024 : 0);
 }
 
 
 float getCurrentTimeSeconds() {
-  return (_current_rtc_time - _start_rtc_time) + (float)(_last_frame - _last_sync) / 1000;
+  return millis() / 1024.0;
 }
