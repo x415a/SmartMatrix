@@ -1,6 +1,6 @@
-#include "define.h"
 #include "RTClib.h"
-#include "Arduino.h"
+#include "define.h"
+#include "time.h"
 
 
 struct TimeHandler
@@ -19,7 +19,6 @@ struct TimeHandler
   }
 
   void init() {
-    Serial.println(RTC_UPDATE_INTERVAL);
     if (!_rtc.begin()) {
       #ifdef DEBUG
         Serial.println("Couldn't find RTC");
@@ -39,24 +38,23 @@ struct TimeHandler
 
   void tick() {
     #define FTIME 1000 / FPS
-    frame_dt = millis() - last_frame;
 
-    if (frame_dt < 0) {
-      last_frame = frame_dt = 0;
-      synchronizeTime();
-      return;
-    }
+    frame_dt = getMillisDelay(last_frame);
 
     if (frame_dt < FTIME)
       delay(FTIME - frame_dt);
-    last_frame = millis();
-
-    if (last_frame - last_sync > RTC_UPDATE_INTERVAL) {
+    if (getMillisDelay(last_sync) > RTC_UPDATE_INTERVAL)
       synchronizeTime();
+    last_frame = millis();
   }
-}
 
 } _TIME_HANDLER;
+
+
+uint32_t getMillisDelay(uint32_t from) {
+  uint32_t ml = millis();
+  return (ml < from) ? UINT32_MAX - ml + from : ml - from;
+}
 
 
 void initTime() {

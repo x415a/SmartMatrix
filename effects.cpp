@@ -17,18 +17,6 @@ void updateEffects() {
 }
 
 
-void matrixCalibrate() {
-  clearMatrix();
-  setMatrixLED(0, 0, CRGB::Red);
-  setMatrixLED(0, 1, CRGB::Blue);
-  setMatrixLED(1, 0, CRGB::Green);
-  setMatrixLED(2, 0, CRGB::Green);
-  refreshMatrix();
-  delay(2000);
-  clearMatrix(true);
-}
-
-
 void sunriseEffect(bool reset) {
   
 }

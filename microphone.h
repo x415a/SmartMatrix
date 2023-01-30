@@ -4,5 +4,6 @@
 
 uint8_t getAudioVolume();
 void printAudioInfo();
+void initMicrophone();
 
 #endif

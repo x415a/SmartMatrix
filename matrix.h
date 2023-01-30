@@ -4,9 +4,6 @@
 #include "FastLED.h"
 
 void initMatrix();
-void initTime();
-void initEffects();
-void initMicrophone();
 void fillMatrix(CRGB);
 void fillMatrix(uint8_t, uint8_t, uint8_t, uint8_t, CRGB);
 void setMatrixLED(uint8_t, uint8_t, CRGB);

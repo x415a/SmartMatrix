@@ -80,8 +80,8 @@ void handleDefaultState(uint8_t btn_id) {
 
 
 HandlerType _handlers[] = {
-    handleDefaultState
-  };
+  handleDefaultState
+};
 
 
 void updateControl() {
