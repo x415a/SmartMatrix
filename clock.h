@@ -6,5 +6,6 @@
 #include "RTClib.h"
 
 void drawClock(DateTime, CRGB);
+void updateClock();
 
 #endif

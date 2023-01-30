@@ -1,9 +1,6 @@
-#include "FastLED.h"
 #include "define.h"
 #include "control.h"
-#include "effects.h"
-#include "clock.h"
-#include "matrix.h"
+#include "modules.h"
 #include "time.h"
 
 
@@ -13,18 +10,12 @@ void setup() {
   #endif
 
   randomSeed(analogRead(0));
-
-  initTime();
-  initMatrix();
-  initEffects();
+  initModules();
 }
 
 
 void loop() {
   updateControl();
-  //updateEffects();
-  drawClock(DateTime(getUnixTime()), CRGB::Green);
-  refreshMatrix();
-  clearMatrix();
+  updateModules();
   frameTick();
 }

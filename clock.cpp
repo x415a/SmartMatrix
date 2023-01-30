@@ -75,3 +75,10 @@ void drawClock(DateTime time, CRGB color) {
 
   _drawSecondsIndicator(hx, hy, color);
 }
+
+
+void updateClock() {
+  clearMatrix();
+  drawClock(DateTime(getUnixTime()), CRGB::Yellow);
+  refreshMatrix();
+}
