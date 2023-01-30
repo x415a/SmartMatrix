@@ -4,32 +4,57 @@
 #include "matrix.h"
 
 
-CRGB matrix[MTX_NUM_LEDS];
+CRGB __MATRIX[MTX_NUM_LEDS];
+
+
+void _matrixCalibrate() {
+  FastLED.setBrightness(MTX_CB_BRIGHTNESS);
+
+  clearMatrix();
+  setMatrixLED(0, 0, CRGB::Red);
+  setMatrixLED(0, 1, CRGB::Blue);
+  setMatrixLED(1, 0, CRGB::Green);
+  setMatrixLED(2, 0, CRGB::Green);
+  refreshMatrix();
+  delay(2000);
+
+  clearMatrix();
+  for (uint16_t x = 0; x < MTX_W; ++x) {
+    for (uint16_t y = 0; y < MTX_H; ++y) {
+      setMatrixLED(x, y, (x % 2) ? ((y % 2) ? CRGB::Yellow : CRGB::Green) : ((y % 2 == 0) ? CRGB::Violet : CRGB::Blue));
+      refreshMatrix();
+      delay(20);
+    }
+  }
+  delay(1000);
+
+  clearMatrix(true);
+}
 
 
 void initMatrix() {
-  FastLED.addLeds<MTX_CHIPSET, MTX_PIN, MTX_CLR_ORDER>(matrix, MTX_NUM_LEDS);
-  
+  FastLED.addLeds<MTX_CHIPSET, MTX_PIN, MTX_CLR_ORDER>(__MATRIX, MTX_NUM_LEDS);
+
   #ifdef MTX_CURRENT_LIM
     FastLED.setMaxPowerInVoltsAndMilliamps(5, MTX_CURRENT_LIM);
   #endif
 
-  FastLED.setBrightness(32);
-
-  matrixCalibrate();
+  #ifdef MTX_CALIBRATION
+    _matrixCalibrate();
+  #endif
 }
 
 
 void fillMatrix(CRGB color) {
   for (uint16_t i = 0; i < MTX_NUM_LEDS; i++)
-    matrix[i] = color;
+    __MATRIX[i] = color;
 }
 
 
 void fillMatrix(uint8_t start_x, uint8_t start_y, uint8_t end_x, uint8_t end_y, CRGB color) {
   for (uint8_t x = start_x; x < end_x; ++x) {
     for (uint8_t y = start_y; y < end_y; ++y) {
-      matrix[getMatrixLEDNum(x, y)] = color;
+      __MATRIX[getMatrixLEDNum(x, y)] = color;
     }
   }
 }
@@ -49,7 +74,7 @@ uint16_t getMatrixLEDNum(uint8_t x, uint8_t y) {
 
 
 void setMatrixLED(uint8_t x, uint8_t y, CRGB color) {
-    matrix[getMatrixLEDNum(x, y)] = color;
+    __MATRIX[getMatrixLEDNum(x, y)] = color;
 }
 
 

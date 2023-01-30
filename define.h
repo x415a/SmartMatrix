@@ -18,6 +18,8 @@
 #define MTX_CHIPSET WS2811
 #define MTX_MIRROR false
 #define MTX_FLIP
+//#define MTX_CALIBRATION
+#define MTX_CB_BRIGHTNESS 64
 
 
 #define BUTTONS_COUNT 3
