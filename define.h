@@ -1,50 +1,16 @@
-#ifndef __DEFINE_H
-#define __DEFINE_H
-#include "Arduino.h"
+#pragma once
+
+#include "connections.h"
 
 #define DEBUG
-#define BOD_RATE 115200
-// #define SET_CURRENT_TIME
+#define BOD_RATE 38400
+#define STRMACRO(A) __XSTRMACRO(A)
+#define __XSTRMACRO(A) #A
 
-#define FPS 60
-#define RTC_UPDATE_INTERVAL (uint32_t) 10 * 60 * 1000
+#define ALARM_CLOCK_HOUR 6
+#define ALARM_CLOCK_MIN 50
+#define ALARM_CLOCK_DUR 30
+#define ALARM_CLOCK_STAY_AFTER_DUR 15
 
-#define MTX_PIN 10
-#define MTX_CLR_ORDER GRB
-#define MTX_W 16
-#define MTX_H 16
-#define MTX_NUM_LEDS MTX_W * MTX_H
-#define MTX_CURRENT_LIM 1900
-#define MTX_CHIPSET WS2811
-#define MTX_MIRROR false
-#define MTX_FLIP
-//#define MTX_CALIBRATION
-#define MTX_CB_BRIGHTNESS 64
-
-
-#define BUTTONS_COUNT 3
-#define BUTTON_L_PIN 3
-#define BUTTON_M_PIN 4
-#define BUTTON_R_PIN 5
-#define BUTTON_CLICK_DELAY 0.030
-#define BUTTON_MULTICLICK_DELAY 0.500
-#define BUTTON_PRESSED_DELAY 0.200
-
-
-//#define AUDIO_PIN A1
-#define AUDIO_FR 2000
-#define AUDIO_SAMPLE (uint16_t) (1 / FPS * AUDIO_FR)
-#define AUDIO_THRESHOLD 2
-#define AUDIO_AMP_GAIN 1.2
-#define AUDIO_MAX_AMP 100
-#define AUDIO_MAX_VOLUME 100
-
-
-#define CLOCK_STYLE_SMALL 1
-#define CLOCK_STYLE_BIG 2
-#define CLOCK_STYLE_SECONDS 3
-
-
-#define AMBIENT_LIGHTING_SPEED 600
-
-#endif
+// #define RTC_SET_CURRENT_TIME
+// #define REWRITE_STORAGE
