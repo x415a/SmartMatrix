@@ -1,7 +1,7 @@
 #pragma once
 
 #define ALARM_CLOCK
-#define ALARM_CLOCK_COLOR 0xfcc203
+#define ALARM_CLOCK_COLOR 0xffd478
 
 #define RTC_UPDATE_INTERVAL (uint32_t) 10 * 60 * 1000  // min * sec * msec
 #define RTC_ERROR_SIGNAL 2

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "connections.h"
+#include "math.h"
 
 #define DEBUG
 #define BOD_RATE 38400

@@ -27,6 +27,7 @@ void setMatrixLED(uint8_t, uint8_t, CRGB const &);
 void setMatrixLED(uint16_t, CRGB const &);
 uint16_t getMatrixLEDNum(uint8_t, uint8_t);
 void refreshMatrix();
+uint8_t getBrightness();
 void setBrightness(uint8_t);
 void resetBrightness();
 void clearMatrix(bool=false);

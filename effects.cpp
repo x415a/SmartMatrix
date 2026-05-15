@@ -38,20 +38,27 @@ void StaticAmbient::event(uint8_t event_type) {
 }
 
 void StaticAmbient::update() {
-  if (isPtValueChanged()) {
-    switch (mode) {
-      case MODE_NORMAL:
-        int32_t v1 = getPtInterpolatedValue(0, 255);
-        hue += interpolatePtValue(0, 255, updatePtValue()) - v1;  // one-liner just won't work, idk
-        fillMatrix(CHSV(hue, 255, brt));
-        refreshMatrix();
-        break;
-      case MODE_SET_BRT:
-        brt = interpolatePtValue(0, 255, updatePtValue());
-        fillMatrix(CHSV(hue, 255, brt));
-        refreshMatrix();
-        break;
-    }
+  bool update = false;
+  uint16_t pt = getPtInterpolatedValue(0, 255);
+
+  switch (mode) {
+    case MODE_NORMAL:
+      if (hue != pt) {
+        hue = pt;
+        update = true;
+      }
+      break;
+    case MODE_SET_BRT:
+      if (brt != pt) {
+        brt = pt;
+        update = true;
+      }
+      break;
+  }
+
+  if (update) {
+    fillMatrix(CHSV(hue, 255, brt));
+    refreshMatrix();
   }
 }
 
@@ -62,18 +69,19 @@ void StaticAmbient::enter() {
 
 void StaticAmbient::exit() {}
 
-Ambient::Ambient() : StaticAmbient(), fill(true), led(0), last_update(0) {}
+
+Ambient::Ambient() : StaticAmbient(), fill(false), led(0), last_update(0), beta(0) {}
 
 void Ambient::update() {
-  StaticAmbient::update();
-
   if (!fill) {
     if (getMillisDelay(last_update) > delay_) {
       hue += AMBIENT_CHANGE_STEP;
       fill = true;
+      beta = getClockTimestamp() % 1024;
+      loop = MTX_NUM_LEDS / gcd(beta, MTX_NUM_LEDS);
     }
   } else if (getMillisDelay(last_update) > AMBIENT_CHANGE_DELAY) {
-    setMatrixLED(led, CHSV(hue, 255, brt));
+    setMatrixLED(calculateLED(), CHSV(calculateHue(), 255, brt));
     refreshMatrix();
     last_update = millis();
     if (++led >= MTX_NUM_LEDS) {
@@ -81,6 +89,16 @@ void Ambient::update() {
       led = 0;
     }
   }
+}
+
+uint16_t Ambient::calculateLED() {
+  uint8_t xled = (uint32_t) ((led * beta + led / loop) % MTX_NUM_LEDS);
+  return (uint32_t) (xled * beta + xled / loop) % MTX_NUM_LEDS;
+}
+
+
+uint8_t Ambient::calculateHue() {
+  return hue + getPtInterpolatedValue(0, 255);
 }
 
 

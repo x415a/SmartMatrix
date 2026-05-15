@@ -57,8 +57,11 @@ struct Ambient : public StaticAmbient {
   void enter();
 
   protected:
-    uint16_t led;
     uint8_t fill;
+    uint16_t led, beta, loop;
     uint32_t last_update;
     const uint32_t delay_ = (AMBIENT_STEP_DURATION_MS > AMBIENT_SHIFT_MS) ? AMBIENT_STEP_DURATION_MS - AMBIENT_SHIFT_MS : 0;
+
+    uint16_t calculateLED();
+    uint8_t calculateHue();
 };

@@ -13,7 +13,6 @@ void _drawPair(uint8_t, uint8_t, uint8_t, uint8_t, uint8_t, uint8_t, uint8_t, CR
 void _drawSecondsIndicator(uint8_t, uint8_t, uint8_t, CRGB const &);
 void _drawClock(CRGB const &);
 uint16_t _getCurrentDayMinutes();
-uint8_t _getAlarmClockLevel(uint16_t);
 
 
 void initClock() {
@@ -86,17 +85,11 @@ bool updateAlarmClock() {
   }
   last_update = cur_min;
 
-  if (cur_min < start_time + ALARM_CLOCK_DUR) {
-    uint8_t level = _getAlarmClockLevel(cur_min - start_time);
-    setBrightness(level);
+  if (cur_min <= start_time + ALARM_CLOCK_DUR) {
+    setBrightness((uint32_t) (cur_min - start_time) * 255 / ALARM_CLOCK_DUR);
     fillMatrix(alarm_color);
     refreshMatrix();
-
-    #ifdef DEBUG
-    Serial.print("ALR: lvl: ");
-    Serial.println(level);
-    #endif
-  } else if (cur_min - start_time - ALARM_CLOCK_DUR < ALARM_CLOCK_STAY_AFTER_DUR) {
+  } else if (cur_min - start_time - ALARM_CLOCK_DUR <= ALARM_CLOCK_STAY_AFTER_DUR) {
   } else {
     resetMatrix();
 
@@ -111,8 +104,9 @@ bool updateAlarmClock() {
 
 
 void updateCommonClock() {
-  if (isPtValueChanged()) {
-    setBrightness(interpolatePtValue(0, 255, updatePtValue()));
+  uint8_t brt = getPtInterpolatedValue(0, 255);
+  if (brt != getBrightness()) {
+    setBrightness(brt);
     refreshMatrix();
   }
   _drawClock(CRGB::Green);
@@ -216,11 +210,6 @@ void _drawClock(CRGB const &color) {
   _drawSecondsIndicator(hx, hy, last_draw, color);
 
   refreshMatrix();
-}
-
-
-inline uint8_t _getAlarmClockLevel(uint16_t minutes) {
-  return 255 - uint8_t(log(ALARM_CLOCK_DUR - minutes) / log(ALARM_CLOCK_DUR) * 254);
 }
 
 

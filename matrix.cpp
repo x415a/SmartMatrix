@@ -1,6 +1,7 @@
 #include "matrix.h"
 
 static CRGB MATRIX[MTX_NUM_LEDS];
+static uint8_t brightness = 0;
 
 
 void _matrixCalibrate() {
@@ -107,8 +108,14 @@ void resetBrightness() {
 }
 
 
+uint8_t getBrightness() {
+  return brightness;
+}
+
+
 void setBrightness(uint8_t value) {
-  FastLED.setBrightness((uint16_t) value * MTX_BRIGHTNESS / 255);
+  static const float _brt_log = log(256);
+  FastLED.setBrightness(brightness = (1 + (MTX_BRIGHTNESS - 1) * (1 - log(255 - value + 1) / _brt_log)));
 }
 
 

@@ -147,7 +147,8 @@ void updateStateMachine() {
 void checkCurrentStateEnter() {
   switch(current_state) {
     case STATE_CLOCK:
-      setBrightness(interpolatePtValue(0, 255, updatePtValue()));
+      setBrightness(getPtInterpolatedValue(0, 255));
+      refreshMatrix();
       break;
     case STATE_BLACKOUT:
       clearMatrix(true);
