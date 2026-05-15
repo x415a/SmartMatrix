@@ -1,8 +1,8 @@
 #pragma once
 
 #define AMBIENT_CIRCLE_DURATION 30  // mins for 0-255 hue circle 
-#define AMBIENT_CHANGE_DELAY 5     // msec between 2 leds update
-#define AMBIENT_CHANGE_STEP 1      // hue step increment
+#define AMBIENT_CHANGE_DELAY 3      // msec between 2 leds update
+#define AMBIENT_CHANGE_STEP 17      // hue step increment
 
 #include "Arduino.h"
 #include "HardwareSerial.h"
@@ -11,6 +11,7 @@
 #include "button.h"
 #include "potentiometer.h"
 #include "clock.h"
+
 
 #define AMBIENT_STEP_DURATION_MS ((uint32_t) AMBIENT_CIRCLE_DURATION * 60 * 1000 / 255)
 #define AMBIENT_SHIFT_MS ((uint32_t) MTX_W * MTX_H * AMBIENT_CHANGE_DELAY)
@@ -56,8 +57,8 @@ struct Ambient : public StaticAmbient {
   void enter();
 
   protected:
-    bool fill;
     uint16_t led;
+    uint8_t fill;
     uint32_t last_update;
     const uint32_t delay_ = (AMBIENT_STEP_DURATION_MS > AMBIENT_SHIFT_MS) ? AMBIENT_STEP_DURATION_MS - AMBIENT_SHIFT_MS : 0;
 };

@@ -19,7 +19,6 @@ void Blackout::exit() {
 }
 
 void Blackout::event(uint8_t event_type) {
-
 }
 
 void Blackout::update() {}
@@ -57,8 +56,7 @@ void StaticAmbient::update() {
 }
 
 void StaticAmbient::enter() {
-  hue = interpolatePtValue(0, 255, updatePtValue());
-  fillMatrix(CHSV(hue, 255, brt));
+  fillMatrix(CHSV(hue = getPtInterpolatedValue(0, 255), 255, brt));
   refreshMatrix();
 }
 
@@ -78,7 +76,7 @@ void Ambient::update() {
     setMatrixLED(led, CHSV(hue, 255, brt));
     refreshMatrix();
     last_update = millis();
-    if (++led >= MTX_W * MTX_H) {
+    if (++led >= MTX_NUM_LEDS) {
       fill = false;
       led = 0;
     }

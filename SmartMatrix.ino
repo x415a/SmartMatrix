@@ -41,7 +41,6 @@ void loop() {
 
 void setup() {
   Serial.begin(BOD_RATE);
-  Serial.println("TEST");
   showStorage();
 }
 

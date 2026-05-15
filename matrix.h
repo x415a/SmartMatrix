@@ -7,7 +7,7 @@
 #define MTX_CLR_ORDER GRB
 #define MTX_W 16
 #define MTX_H 16
-#define MTX_NUM_LEDS MTX_W * MTX_H
+#define MTX_NUM_LEDS (MTX_W * MTX_H)
 #define MTX_CURRENT_LIM 1600
 #define MTX_CHIPSET WS2813
 #define MTX_MIRROR false

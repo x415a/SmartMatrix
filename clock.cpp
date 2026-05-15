@@ -54,8 +54,7 @@ void abortAlarmClock() {
 
 
 uint32_t getMillisDelay(uint32_t time) {
-  uint32_t ml = millis();
-  return (ml < time) ? UINT32_MAX - time + ml : ml - time;
+  return millis() - time;
 }
 
 
@@ -68,7 +67,7 @@ bool checkAlarmClock() {
     return true;
   }
 
-  if (start_time <= cur_min && cur_min < start_time + ALARM_CLOCK_DUR) {
+  if (start_time <= cur_min && cur_min <= start_time + ALARM_CLOCK_DUR) {
     #ifdef DEBUG
     Serial.println("ALR: started");
     #endif
